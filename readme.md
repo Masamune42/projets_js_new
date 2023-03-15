@@ -115,3 +115,93 @@ function afficherListe(todo) {
 // On ne garde que les éléments HTML du tableau ayant data-key de li (itération) différents du data-key de el 
 toutesLesTaches = toutesLesTaches.filter(li => li.dataset.key !== el.dataset.key);
 ```
+
+### ValidationForm
+Pour vérifier et valider un champ de formulaire, on le select et on détecte un Event blur ou un input dessus
+```js
+const userInput = document.querySelector(".input-group:nth-child(1) input");
+
+// blur = on retire le focus de l'élément
+userInput.addEventListener("blur", userValidation)
+userInput.addEventListener("input", userValidation)
+```
+
+On peut déclarer directement un type Regex en JS et utiliser par la suite des fonctions qui lui sont associées
+```js
+// Déclaration de l'objet Regex
+const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+function mailValidation() {
+    // On test la valeur de l'input avec le regex déclaré
+    if (regexEmail.test(mailInput.value)) {
+        showValidation({ index: 1, validation: true })
+        inputsValidity.email = true;
+    }
+    else {
+        showValidation({ index: 1, validation: false })
+        inputsValidity.email = false;
+    }
+}
+```
+
+On peut vérifier les propriétés et les fonctions d'un objet
+```js
+console.dir(regexEmail);
+```
+
+On peut utiliser le destructuring pour passer des paramètres dans une fonction
+```js
+// Déclaration
+function showValidation({ index, validation }) {
+    if (validation) {
+        validationIcons[index].style.display = "inline";
+        validationIcons[index].src = "ressources/check.svg";
+        if (validationTexts[index])
+            validationTexts[index].style.display = "none";
+    } else {
+        validationIcons[index].style.display = "inline";
+        validationIcons[index].src = "ressources/error.svg";
+        if (validationTexts[index])
+            validationTexts[index].style.display = "block";
+    }
+}
+
+// Utilisation
+showValidation({ index: 1, validation: false })
+```
+
+On peut facilement créer des objets avec des valeurs associées (ex: booléen, Regex...) afin de les utiliser
+```js
+const passwordVerification = {
+    length: false,
+    symbol: false,
+    number: false
+}
+
+const regexList = {
+    symbol: /[^a-zA-Z0-9\s]/,
+    number: /[0-9]/
+}
+// ...
+// On boucle sur chaque élément de l'objet passwordVerification : prop prendra la valeur "length", "symbol" et "number" dans l'ordre
+for (const prop in passwordVerification) {
+    // Pour "length"
+    if (prop === "length") {
+        if (passwordValue.length < 6)
+            passwordVerification.length = false;
+        else {
+            passwordVerification.length = true;
+            validationResult++;
+        }
+        // Si on a vérifié on ne doit pas vérifier la suite car length n'a pas de Regex à tester
+        continue;
+    }
+
+    // Pour les cas "symbol" et "number", on vérifie leur Regex
+    if (regexList[prop].test(passwordValue)) {
+        passwordVerification[prop] = true;
+        validationResult++;
+    }
+    else
+        passwordVerification[prop] = false;
+}
+```

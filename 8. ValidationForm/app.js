@@ -9,16 +9,22 @@ const form = document.querySelector("form");
 const container = document.querySelector(".container");
 form.addEventListener("submit", handleForm);
 
+// Booléen de l'animation de shake du formulaire
 let isAnimating = false;
 function handleForm(e) {
     e.preventDefault()
+    // On récupère tous les noms des propriétés de inputsValidity
     const keys = Object.keys(inputsValidity)
-    const failedInputs = keys.filter(key => {
-        if (!inputsValidity[key]) {
-            return key;
-        }
-    })
+    // On récupère les clés non validées avec un filtre pour ne récupérer que celles qui sont à false
+    // Ecriture simplifiée du bloc en dessous
+    const failedInputs = keys.filter(key => !inputsValidity[key])
+    // const failedInputs = keys.filter(key => {
+    //     if (!inputsValidity[key]) {
+    //         return key;
+    //     }
+    // })
 
+    // Si on a repéré des champs en erreurs et que l'animation ne sait pas lancée
     if (failedInputs.length && !isAnimating) {
         isAnimating = true;
         container.classList.add("shake");
@@ -32,27 +38,33 @@ function handleForm(e) {
             showValidation({ index: index, validation: false })
         })
     }
-    else {
+    else if(!failedInputs.length) {
         alert("Données envoyées avec succès.")
-    }
-}
-
-function showValidation({ index, validation }) {
-    if (validation) {
-        validationIcons[index].style.display = "inline";
-        validationIcons[index].src = "ressources/check.svg";
-        if (validationTexts[index])
-            validationTexts[index].style.display = "none";
-    } else {
-        validationIcons[index].style.display = "inline";
-        validationIcons[index].src = "ressources/error.svg";
-        if (validationTexts[index])
-            validationTexts[index].style.display = "block";
     }
 }
 
 const validationIcons = document.querySelectorAll('.icone-verif');
 const validationTexts = document.querySelectorAll('.error-msg');
+function showValidation({ index, validation }) {
+    if (validation) {
+        // Affichage du svg check
+        validationIcons[index].style.display = "inline";
+        validationIcons[index].src = "ressources/check.svg";
+        // Si on se situe sur un champ qui possède un message d'erreur, on le fait disparaitre
+        if (validationTexts[index])
+            validationTexts[index].style.display = "none";
+    } else {
+        // Affichage du svg erreur
+        validationIcons[index].style.display = "inline";
+        validationIcons[index].src = "ressources/error.svg";
+        // Si on se situe sur un champ qui possède un message d'erreur, on le fait aparaitre
+        if (validationTexts[index])
+            validationTexts[index].style.display = "block";
+    }
+}
+
+
+// 1 -> Vérification du nom d'utilisateur
 const userInput = document.querySelector(".input-group:nth-child(1) input");
 
 // blur = on retire le focus de l'élément
@@ -70,6 +82,7 @@ function userValidation() {
     }
 }
 
+// 2 -> Vérification du mail
 const mailInput = document.querySelector(".input-group:nth-child(2) input");
 mailInput.addEventListener("blur", mailValidation)
 mailInput.addEventListener("input", mailValidation)
@@ -87,6 +100,7 @@ function mailValidation() {
     }
 }
 
+// 3 -> Vérification du mot de passe
 const pswInput = document.querySelector(".input-group:nth-child(3) input");
 pswInput.addEventListener("blur", passwordValidation)
 pswInput.addEventListener("input", passwordValidation)
@@ -138,6 +152,7 @@ function passwordValidation(e) {
     passwordStrength()
 }
 
+// Affichage de la force du mot de passe
 const lines = document.querySelectorAll(".lines div");
 function passwordStrength() {
     const passwordLength = pswInput.value.length;
@@ -166,11 +181,13 @@ function passwordStrength() {
         })
     }
 
+    // Si on a rentré une valeur dans le champ de vérification de mot de passe (= on a affiché une icone check/error)
     if (validationIcons[3].style.display === "inline") {
         confirmPassword();
     }
 }
 
+// 4 -> Confirmation du mot de passe
 const confirmInput = document.querySelector(".input-group:nth-child(4) input");
 confirmInput.addEventListener("blur", confirmPassword)
 confirmInput.addEventListener("input", confirmPassword)
