@@ -1,18 +1,39 @@
-const validationIcons = document.querySelectorAll('.icone-verif');
-const validationTexts = document.querySelectorAll('.error-msg');
+const inputsValidity = {
+    user: false,
+    email: false,
+    password: false,
+    passwordConfirmation: false,
+}
 
-const userInput = document.querySelector(".input-group:nth-child(1) input");
+const form = document.querySelector("form");
+const container = document.querySelector(".container");
+form.addEventListener("submit", handleForm);
 
-// blur = on retire le focus de l'élément
-userInput.addEventListener("blur", userValidation)
-userInput.addEventListener("input", userValidation)
+let isAnimating = false;
+function handleForm(e) {
+    e.preventDefault()
+    const keys = Object.keys(inputsValidity)
+    const failedInputs = keys.filter(key => {
+        if (!inputsValidity[key]) {
+            return key;
+        }
+    })
 
-function userValidation() {
-    if (userInput.value.length >= 3) {
-        showValidation({ index: 0, validation: true })
+    if (failedInputs.length && !isAnimating) {
+        isAnimating = true;
+        container.classList.add("shake");
+        setTimeout(() => {
+            container.classList.remove("shake");
+            isAnimating = false;
+        }, 400)
+
+        failedInputs.forEach(input => {
+            const index = keys.indexOf(input)
+            showValidation({ index: index, validation: false })
+        })
     }
     else {
-        showValidation({ index: 0, validation: false })
+        alert("Données envoyées avec succès.")
     }
 }
 
@@ -30,8 +51,26 @@ function showValidation({ index, validation }) {
     }
 }
 
-const mailInput = document.querySelector(".input-group:nth-child(2) input");
+const validationIcons = document.querySelectorAll('.icone-verif');
+const validationTexts = document.querySelectorAll('.error-msg');
+const userInput = document.querySelector(".input-group:nth-child(1) input");
 
+// blur = on retire le focus de l'élément
+userInput.addEventListener("blur", userValidation)
+userInput.addEventListener("input", userValidation)
+
+function userValidation() {
+    if (userInput.value.length >= 3) {
+        showValidation({ index: 0, validation: true })
+        inputsValidity.user = true;
+    }
+    else {
+        showValidation({ index: 0, validation: false })
+        inputsValidity.user = false;
+    }
+}
+
+const mailInput = document.querySelector(".input-group:nth-child(2) input");
 mailInput.addEventListener("blur", mailValidation)
 mailInput.addEventListener("input", mailValidation)
 
@@ -40,14 +79,15 @@ const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 function mailValidation() {
     if (regexEmail.test(mailInput.value)) {
         showValidation({ index: 1, validation: true })
+        inputsValidity.email = true;
     }
     else {
         showValidation({ index: 1, validation: false })
+        inputsValidity.email = false;
     }
 }
 
 const pswInput = document.querySelector(".input-group:nth-child(3) input");
-
 pswInput.addEventListener("blur", passwordValidation)
 pswInput.addEventListener("input", passwordValidation)
 
@@ -63,7 +103,6 @@ const regexList = {
 }
 
 let passwordValue;
-
 function passwordValidation(e) {
     passwordValue = pswInput.value;
     let validationResult = 0;
@@ -89,9 +128,11 @@ function passwordValidation(e) {
 
     if (validationResult !== 3) {
         showValidation({ index: 2, validation: false })
+        inputsValidity.password = false;
     }
     else {
         showValidation({ index: 2, validation: true })
+        inputsValidity.password = true;
     }
 
     passwordStrength()
@@ -125,13 +166,12 @@ function passwordStrength() {
         })
     }
 
-    if(validationIcons[3].style.display === "inline") {
+    if (validationIcons[3].style.display === "inline") {
         confirmPassword();
     }
 }
 
 const confirmInput = document.querySelector(".input-group:nth-child(4) input");
-
 confirmInput.addEventListener("blur", confirmPassword)
 confirmInput.addEventListener("input", confirmPassword)
 
@@ -143,8 +183,10 @@ function confirmPassword() {
     }
     else if (confirmedValue !== passwordValue) {
         showValidation({ index: 3, validation: false })
+        inputsValidity.passwordConfirmation = false;
     }
     else {
         showValidation({ index: 3, validation: true })
+        inputsValidity.passwordConfirmation = true;
     }
 }
