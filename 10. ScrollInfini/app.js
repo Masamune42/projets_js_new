@@ -13,13 +13,11 @@ async function fetchData() {
     }
 
     const data = await response.json();
-
+    // Si on a pas trouvé de résultat on renvoie un message d'erreur
     if (!data.total) {
       imagesList.textContent = "";
       throw new Error('Wopsy, rien de tel dans notre base de données ... tentez un mot clé plus précis !')
     }
-
-    console.log(data);
     createImages(data.results)
 
   } catch (error) {
@@ -37,13 +35,18 @@ function createImages(data) {
   });
 }
 
+// On va détecter l'évolution de l'intersection d'un élément
+// rootMargin: "50%" -> déclenche 50% plus tôt par rapport à la hauteur de la fenêtre
 const observer = new IntersectionObserver(handleIntersect, { rootMargin: "50%" })
+// On précise l'élément à observer -> dès que la div avec la class infinite-marker rentre dans notre fenêtre
 observer.observe(document.querySelector(".infinite-marker"))
 
 
 function handleIntersect(entries) {
   console.log(entries)
-  if(window.scrollY > window.innerHeight && entries[0].isIntersecting) {
+  // Si j'ai déjà scrollé supérieur à la hauteur de la fenêtre et si je suis en train d'intersecter 
+  if (window.scrollY > window.innerHeight && entries[0].isIntersecting) {
+    // On passe à la page suivante avant de faire un nouvel appel à l'API et d'afficher les images suivantes
     pageIndex++;
     fetchData();
   }
@@ -59,7 +62,7 @@ function handleSearch(e) {
   e.preventDefault();
 
   imagesList.textContent = "";
-  if(!input.value) {
+  if (!input.value) {
     errorMsg.textContent = "L'objet de la recherche ne peut être vide."
     return;
   }
@@ -71,7 +74,7 @@ function handleSearch(e) {
 }
 
 const scrollToTop = document.querySelector(".scroll-to-top");
-
+// On défini la fonction permettant de remonter tout en haut de la page au bouton sélectionné
 scrollToTop.addEventListener("click", pushToTop);
 
 function pushToTop() {

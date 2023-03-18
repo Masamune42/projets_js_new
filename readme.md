@@ -205,3 +205,39 @@ for (const prop in passwordVerification) {
         passwordVerification[prop] = false;
 }
 ```
+
+
+### ScrollInfini
+On peut créer un observer de type "IntersectionObserver" qui va se déclencher lorsque que l'élément indiqué dans la fonction observe() entre dans la fenêtre. On peut ajouter un paramètre rootMargin pour spécifier si l'élément doit se déclencher un nombre de % de hauteur de fenêtre avant
+```js
+// On va détecter l'évolution de l'intersection d'un élément
+// rootMargin: "50%" -> déclenche 50% plus tôt par rapport à la hauteur de la fenêtre
+const observer = new IntersectionObserver(handleIntersect, { rootMargin: "50%" })
+// On précise l'élément à observer -> dès que la div avec la class infinite-marker rentre dans notre fenêtre
+observer.observe(document.querySelector(".infinite-marker"))
+
+
+function handleIntersect(entries) {
+  console.log(entries)
+  // Si j'ai déjà scrollé supérieur à la hauteur de la fenêtre et si je suis en train d'intersecter 
+  if (window.scrollY > window.innerHeight && entries[0].isIntersecting) {
+    // On passe à la page suivante avant de faire un nouvel appel à l'API et d'afficher les images suivantes
+    pageIndex++;
+    fetchData();
+  }
+}
+```
+
+Exemple de création d'un bouton permettant de remonter tout en haut de la page
+```js
+const scrollToTop = document.querySelector(".scroll-to-top");
+// On défini la fonction permettant de remonter tout en haut de la page au bouton sélectionné
+scrollToTop.addEventListener("click", pushToTop);
+
+function pushToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  })
+}
+```
