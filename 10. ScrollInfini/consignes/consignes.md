@@ -3,7 +3,7 @@
 
 <br>
 
-  Le scroll infini fait couler beaucoup d'encre(ou de pixels), mais que l'on soit pour ou contre ce dernier, il faut savoir le coder.<br>
+  Le scroll infini fait couler beaucoup d'encre(ou de pixels), mais que l'on soit ou pour contre ce dernier, il faut savoir le coder.<br>
   Dans ce projet, vous utiliserez l'API de la banque d'images Unsplash afin d'intégrer un scroll infini + un système de recherche.
 
 <br>
@@ -19,7 +19,7 @@
 ### B. Fonctionnalités JavaScript à coder pour ce projet
 
 1. Créez un compte gratuitement sur Unsplash et procurez-vous une clé d'API.
-2. Faites apparaître des images lorsqu'on arrive sur le site, j'ai choisi la searchQuery "random".
+2. Faites apparaître des images quand on arrive sur le site, j'ai choisi la searchQuery "random".
 3. Créez un système de scroll infini à l'aide d'Intersection Observer (c'est plus performant que l'événement scroll sur window).
 4. Occupez-vous de la recherche, et c'est bon !
   
