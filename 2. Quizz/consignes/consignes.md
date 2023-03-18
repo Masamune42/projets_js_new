@@ -4,7 +4,7 @@
 
 <br>
 
-Le but de ce projet est de coder un quizz qui affiche des messages et des couleurs différentes en fonction des résultats de ce dernier.
+Le but de ce projet est de coder un quiz qui affiche des messages et des couleurs différents en fonction des résultats.
 
 <br>
 
