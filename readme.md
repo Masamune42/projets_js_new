@@ -241,3 +241,57 @@ function pushToTop() {
   })
 }
 ```
+
+### Liste filtrable
+On peut créer des fonctions de tri personnalisé
+```js
+// Fonction de tri par nom de famille
+function orderList(data) {
+  data.sort((a, b) => {
+    if (a.name.last < b.name.last) {
+      return - 1;
+    }
+    else if (a.name.last > b.name.last) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  })
+}
+```
+
+Création d'une fonction de recherche et filtrage personnalisé d'éléments
+```js
+const searchInput = document.querySelector("#search")
+
+searchInput.addEventListener("input", filterData)
+
+function filterData(e) {
+  tableResults.textContent = "";
+
+  const searchedString = e.target.value.toLowerCase().replace(/\s/g, "");
+  // On récupère un table filtré par la valeur de recherche via une fonction de recherche "searchForOccurences"
+  const filteredArr = dataArray.filter(userData => searchForOccurences(userData))
+
+  function searchForOccurences(userData) {
+    // On déclare les différents de types de recherches
+    const searchTypes = {
+      firstname: userData.name.first.toLowerCase(),
+      lastname: userData.name.last.toLowerCase(),
+      firstAndLast: `${userData.name.first + userData.name.last}`.toLowerCase(),
+      lastAndFirst: `${userData.name.last + userData.name.first}`.toLowerCase(),
+    }
+
+    // Si uen valeur de propriété correspond à la recherche, on return true -> on ajoute la valeur à la recherche filtrée
+    for (const prop in searchTypes) {
+      if (searchTypes[prop].includes(searchedString)) {
+        return true;
+      }
+    }
+  }
+
+  // On actualise la liste des users avec le filtre
+  createUserlist(filteredArr)
+}
+```
